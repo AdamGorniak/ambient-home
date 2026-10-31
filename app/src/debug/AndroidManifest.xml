@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <application android:label="Ambient Universal · TEST" tools:replace="android:label">
+        <activity android:name=".MainActivity"><intent-filter tools:node="removeAll" /></activity>
+    </application>
+</manifest>

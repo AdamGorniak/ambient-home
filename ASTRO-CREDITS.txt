@@ -1,0 +1,64 @@
+
+id     : ann13016a
+credit : ESO/C. Malin (christophmalin.com)
+
+id     : eso0932a
+credit : ESO/S. Brunier
+
+id     : eso0934a
+credit : ESO/S. Guisard (www.eso.org/~sguisard)
+
+id     : lv_Brunier_hb-1
+credit : ESO/S. Brunier
+
+id     : potw1038a
+credit : ESO/José Francisco Salgado (josefrancisco.org)
+
+id     : potw1043a
+credit : Iztok Bončina/ESO
+
+id     : potw1108a
+credit : ESO/José Francisco Salgado (josefrancisco.org)
+
+id     : potw1119a
+credit : ESO/Y. Beletsky
+
+id     : potw1132a
+credit : ESO/Y. Beletsky
+
+id     : potw1150a
+credit : ESO/B. Tafreshi (twanight.org)
+
+id     : potw1216a
+credit : ESO/B. Tafreshi (twanight.org)
+
+id     : potw1217a
+credit : ESO/S. Guisard (www.eso.org/~sguisard)
+
+id     : potw1222a
+credit : ESO/B. Tafreshi (twanight.org)
+
+id     : potw1226a
+credit : ESO/J. Girard (djulik.com)
+
+id     : potw1533a
+credit : ESO/B. Tafreshi (twanight.org)
+
+id     : potw1549a
+credit : John Colosimo (colosimophotography.com)/ESO
+
+id     : potw1830a
+credit : Y. Beletsky (LCO)/ESO
+
+id     : potw1948a
+credit : P. Horálek/ESO
+
+id     : uhd_yuri_alma_ant_cc
+credit : Y. Beletsky (LCO)/ESO
+
+id     : vlt-mw-potw
+credit : ESO/H.H. Heyer
+
+id     : yb_vlt_moon_cnn_cc
+credit : ESO/Y. Beletsky
+

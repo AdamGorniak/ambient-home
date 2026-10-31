@@ -1,0 +1,226 @@
+[
+  {
+    "id": "lake",
+    "title": "Jezioro",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "peaks",
+    "title": "Szczyty",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "valley",
+    "title": "Dolina",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "forest",
+    "title": "Las",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "wild",
+    "title": "Dzika natura",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "alpine",
+    "title": "Alpejskie jezioro",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "horizon",
+    "title": "Horyzont",
+    "credit": "Unsplash",
+    "source": "https://unsplash.com/license",
+    "category": "nature",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "ann13016a",
+    "title": "Obłoki Magellana nad ALMA",
+    "credit": "ESO/C. Malin (christophmalin.com)",
+    "source": "https://www.eso.org/public/images/ann13016a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "eso0932a",
+    "title": "Panorama Drogi Mlecznej",
+    "credit": "ESO/S. Brunier",
+    "source": "https://www.eso.org/public/images/eso0932a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "eso0934a",
+    "title": "Serce Galaktyki",
+    "credit": "ESO/S. Guisard (www.eso.org/~sguisard)",
+    "source": "https://www.eso.org/public/images/eso0934a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "lv_Brunier_hb-1",
+    "title": "Galaktyczne centrum nad La Silla",
+    "credit": "ESO/S. Brunier",
+    "source": "https://www.eso.org/public/images/lv_Brunier_hb-1/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1038a",
+    "title": "Blask gwiazd nad Paranal",
+    "credit": "ESO/José Francisco Salgado (josefrancisco.org)",
+    "source": "https://www.eso.org/public/images/potw1038a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1043a",
+    "title": "Ślady gwiazd nad La Silla",
+    "credit": "Iztok Bončina/ESO",
+    "source": "https://www.eso.org/public/images/potw1043a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1108a",
+    "title": "Księżyc i Droga Mleczna",
+    "credit": "ESO/José Francisco Salgado (josefrancisco.org)",
+    "source": "https://www.eso.org/public/images/potw1108a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1119a",
+    "title": "Zaćmienie pod gwiazdami",
+    "credit": "ESO/Y. Beletsky",
+    "source": "https://www.eso.org/public/images/potw1119a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1132a",
+    "title": "Śnieżna noc w Paranal",
+    "credit": "ESO/Y. Beletsky",
+    "source": "https://www.eso.org/public/images/potw1132a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1150a",
+    "title": "Świat ALMA nocą",
+    "credit": "ESO/B. Tafreshi (twanight.org)",
+    "source": "https://www.eso.org/public/images/potw1150a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1216a",
+    "title": "APEX pod Drogą Mleczną",
+    "credit": "ESO/B. Tafreshi (twanight.org)",
+    "source": "https://www.eso.org/public/images/potw1216a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1217a",
+    "title": "Łuk Galaktyki i Księżyc",
+    "credit": "ESO/S. Guisard (www.eso.org/~sguisard)",
+    "source": "https://www.eso.org/public/images/potw1217a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1222a",
+    "title": "Południowa Droga Mleczna",
+    "credit": "ESO/B. Tafreshi (twanight.org)",
+    "source": "https://www.eso.org/public/images/potw1222a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1226a",
+    "title": "Noc na pustyni Atakama",
+    "credit": "ESO/J. Girard (djulik.com)",
+    "source": "https://www.eso.org/public/images/potw1226a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1533a",
+    "title": "Kosmiczna tęcza",
+    "credit": "ESO/B. Tafreshi (twanight.org)",
+    "source": "https://www.eso.org/public/images/potw1533a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1549a",
+    "title": "Galaktyczny taras",
+    "credit": "John Colosimo (colosimophotography.com)/ESO",
+    "source": "https://www.eso.org/public/images/potw1549a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1830a",
+    "title": "Serce Drogi Mlecznej",
+    "credit": "Y. Beletsky (LCO)/ESO",
+    "source": "https://www.eso.org/public/images/potw1830a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "potw1948a",
+    "title": "Gwiazdy nad La Silla",
+    "credit": "P. Horálek/ESO",
+    "source": "https://www.eso.org/public/images/potw1948a/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "uhd_yuri_alma_ant_cc",
+    "title": "Galaktyka nad antenami ALMA",
+    "credit": "Y. Beletsky (LCO)/ESO",
+    "source": "https://www.eso.org/public/images/uhd_yuri_alma_ant_cc/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "vlt-mw-potw",
+    "title": "Łuk południowego nieba",
+    "credit": "ESO/H.H. Heyer",
+    "source": "https://www.eso.org/public/images/vlt-mw-potw/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  },
+  {
+    "id": "yb_vlt_moon_cnn_cc",
+    "title": "Koniunkcja nad Paranal",
+    "credit": "ESO/Y. Beletsky",
+    "source": "https://www.eso.org/public/images/yb_vlt_moon_cnn_cc/",
+    "category": "astro",
+    "license": "CC BY 4.0"
+  }
+]

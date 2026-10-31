@@ -1,0 +1,4 @@
+<resources>
+    <string name="home_service_name">Ambient Home — przycisk HOME</string>
+    <string name="home_service_description">Otwiera Ambient Home po wykryciu okna innego zainstalowanego launchera HOME. Pomija kreatory konfiguracji i recovery. Nie odczytuje treści ekranu ani klawiszy i nie zmienia mapowań QuickBars. Nie wyłącza pakietów ani nie zmienia roli HOME. Skuteczność zależy od firmware; wyłącz usługę, aby zakończyć przekierowanie.</string>
+</resources>
