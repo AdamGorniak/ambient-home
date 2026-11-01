@@ -20,9 +20,12 @@ class DebloatBatchTest {
         }
     }
     @Test fun automaticProposalsAreOnlyKnownNonCriticalProfiles() {
-        assertTrue(DebloatPolicy.quickCandidates.isNotEmpty())
-        assertTrue(DebloatPolicy.quickCandidates.size <= 10)
-        for (pkg in DebloatPolicy.quickCandidates) {
+        val device = DebloatDevice("Xiaomi", "MiTV-MOOR2", "Xiaomi/flipped/venom:11/RTM5.220609.003/2674:user/release-keys")
+        val targets = AutomaticDebloat.targets(device)
+        assertTrue(targets.isNotEmpty())
+        assertTrue(targets.size <= 10)
+        for (target in targets) {
+            val pkg = target.pkg
             assertTrue(pkg, pkg in DebloatPolicy.profiles)
             assertNull(pkg, DebloatPolicy.protection(pkg, "pl.ambienthome.tv", emptySet()))
         }

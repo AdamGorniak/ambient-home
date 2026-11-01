@@ -10,7 +10,6 @@ interface DebloatJournal {
     fun put(change: DebloatChange)
 }
 object DebloatPolicy {
-    val quickCandidates = setOf("com.miui.tv.analytics", "com.xiaomi.statistic", "com.xm.webcontent", "com.mitv.tvhome.michannel", "com.mitv.tvhome.oemtab", "fusion.android.tv.demo")
     val profiles = mapOf(
         "com.miui.tv.analytics" to "Analityka Xiaomi. Wyłączenie ogranicza działanie tego pakietu, nie całej telemetrii TV.",
         "com.xiaomi.statistic" to "Statystyki Xiaomi. Funkcje statystyk producenta przestaną działać.",
@@ -64,16 +63,31 @@ class DebloatEngine(private val shell: Shell, private val journal: DebloatJourna
         check(result.code == 0) { "Nie udało się odczytać stanu $pkg" }
         return result.output
     }
-    fun disable(pkg: String): String {
+    fun automaticEligible(pkg: String, device: DebloatDevice): Boolean {
+        val target = AutomaticDebloat.target(device, pkg) ?: return false
+        if (DebloatPolicy.protection(pkg, own, protectedPackages) != null) return false
+        if (journal.entries().any { it.pkg == pkg && it.user == user && it.pending }) return false
+        val snapshot = dump(pkg)
+        return AutomaticDebloat.matches(target, snapshot) && parseState(snapshot, user) in 0..1 && systemApplication(snapshot)
+    }
+    fun disableAutomatic(pkg: String, device: DebloatDevice): String {
+        val target = AutomaticDebloat.target(device, pkg) ?: error("Brak zgodnego profilu automatycznego")
+        return disableChecked(pkg, target)
+    }
+    fun disable(pkg: String): String = disableChecked(pkg, null)
+    private fun systemApplication(snapshot: String): Boolean {
+        val uid = Regex("\\b(?:userId|appId)=(\\d+)\\b").find(snapshot)?.groupValues?.get(1)?.toIntOrNull()
+        return uid != null && uid >= 10000 && Regex("(?:pkgFlags|flags)=\\[[^]\\r\\n]*\\bSYSTEM\\b").containsMatchIn(snapshot)
+    }
+    private fun disableChecked(pkg: String, automatic: AutomaticTarget?): String {
         check(DebloatPolicy.protection(pkg, own, protectedPackages) == null) { DebloatPolicy.protection(pkg, own, protectedPackages).orEmpty() }
         check(manual || pkg in DebloatPolicy.profiles) { "Nieznany pakiet wymaga trybu ręcznego" }
         check(journal.entries().none { it.pkg == pkg && it.user == user && it.pending }) { "Ten pakiet ma już zmianę w dzienniku; najpierw ją przywróć" }
         val snapshot = dump(pkg)
+        check(automatic == null || AutomaticDebloat.matches(automatic, snapshot)) { "Wersja pakietu nie pasuje do profilu; pominięto automatyczną zmianę" }
         val before = parseState(snapshot, user)
         if (before !in 0..1) return "Pakiet był już wyłączony; nie zmieniono go i nie dodano do przywracania"
-        val uid = Regex("\\b(?:userId|appId)=(\\d+)\\b").find(snapshot)?.groupValues?.get(1)?.toIntOrNull()
-        check(uid != null && uid >= 10000) { "Chroniony lub nieustalony identyfikator systemowy pakietu" }
-        check(Regex("(?:pkgFlags|flags)=\\[[^]\\r\\n]*\\bSYSTEM\\b").containsMatchIn(snapshot)) { "Operacja dotyczy wyłącznie zweryfikowanych aplikacji systemowych" }
+        check(systemApplication(snapshot)) { "Chroniony UID lub niepotwierdzona aplikacja systemowa" }
         val change = DebloatChange(pkg, before, user, "planned", System.currentTimeMillis())
         journal.put(change) // A failed durable write MUST prevent the system command.
         try {

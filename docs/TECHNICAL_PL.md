@@ -1,4 +1,4 @@
-# Ambient Home Universal 0.5.0-beta1
+# Ambient Home Universal 0.5.1-beta1
 
 Natywny launcher Android TV / Google TV: fotograficzne tło, zegar, pogoda, przewijany dock i opcjonalny Debloat wykonywany bezpośrednio z APK przez lokalne ADB. Kotlin i standardowe widoki Androida, bez reklam, analityki i frameworka UI.
 
@@ -19,7 +19,7 @@ Ustawienia → **Debloat · narzędzia ADB**.
 
 1. W opcjach programisty TV włącz debugowanie i klasyczne sieciowe ADB TCP. Zwykle jest to port 5555.
 2. W menu wybierz Połącz / sprawdź ADB. Zaakceptuj klucz RSA Ambient na ekranie TV. Jeżeli pytanie RSA przerwie pierwszą próbę, po akceptacji ponów sprawdzenie.
-3. Wybierz **Szybki debloat · wykryj propozycje**. APK sprawdzi pakiety na tym urządzeniu i pokaże dostępne propozycje. Odznacz niechciane pozycje, przejrzyj plan, pobierz jego kopię i świadomie wybierz Wykonaj plan.
+3. Wybierz **Szybkie czyszczenie · dobór automatyczny**. APK samo dobierze pakiety z profilu zgodnego z modelem, firmware i wersją pakietu. Jedno potwierdzenie uruchamia plan, bez zaznaczania pakietów. Brak profilu oznacza brak automatycznych zmian. Można pobrać kopię planu i raportu.
 4. Przywróć zmiany Ambient odtwarza tylko pozycje zapisane przez ten moduł. Można przywrócić jedną zmianę lub wszystkie własne zmiany.
 
 Po autoryzacji operacje wykonuje samo APK przez 127.0.0.1 lub własny adres TV. Nie potrzebuje stale działającego komputera, HA, Shizuku, roota ani zewnętrznego serwera. Aplikacja nie uruchamia adbd i nie potrafi sama włączyć wyłączonego debugowania. **Jeśli firmware nie udostępnia sieciowego ADB z menu, może być potrzebne jednorazowe przygotowanie przez PC.** Parowanie TLS kodem/QR nowego Wireless debugging nie jest obsługiwane w tej wersji. Przy zamkniętym ADB sam launcher nadal działa.
@@ -28,7 +28,7 @@ Nie ma cyklicznego debloatu, automatycznego działania po restarcie ani samoczyn
 
 ## Zakres i zabezpieczenia Debloatu
 
-- Szybki profil zawiera obecnie sześć znanych identyfikatorów reklam/treści, analityki i demo, głównie Xiaomi. Lista pakietów z opisem obejmuje także opcjonalne aplikacje. To początkowy katalog, nie baza wszystkich modeli i nie dowód, że opisany pakiet jest zbędny w każdej konfiguracji.
+- Automatyczny profil jest ograniczony do jednego pakietu analityki na dokładnym modelu/buildzie/wersji; patrz [opis profilu](AUTOMATIC-DEBLOAT.md). Narzędzia indywidualne znajdują się w menu Zaawansowane. Tryb ręczny nie rozszerza automatu.
 - Pełna lista systemowa jest odczytowa, dopóki użytkownik nie wybierze pakietu i nie potwierdzi zmiany. Nieopisane pakiety wymagają osobnego włączenia trybu ręcznego. Chronione składniki nadal są niedostępne do wyłączenia.
 - Ochrona obejmuje własny launcher, inne launchery wykryte jako HOME, setup/recovery, główne usługi Google i platformy, instalator, sprzęt/sieć, aktywne usługi dostępności (w tym QuickBars/Button Mapper), administratorów i dostawców wejść TV. Pakiety z podstawowym współdzielonym UID systemowym są odrzucane również w trybie ręcznym. Dodatkowe zależności producenta mogą nie być znane.
 - Operacja to **pm disable-user dla użytkownika aplikacji**, bez uninstall, pm clear, zmian partycji lub factory reset. Wyłączona aplikacja i powiązane funkcje przestają działać, a dane i APK pozostają na urządzeniu.
@@ -42,7 +42,7 @@ Przed zmianami użyj Kopia planu i raportu lub Dziennik i kopia raportu → Pobi
 
 Nie usuwaj danych ani nie odinstalowuj Ambient przed przywróceniem zmian lub pobraniem kopii raportu. Po utracie aplikacji nadal można świadomie wykonać zapisane polecenia z komputera przez autoryzowane ADB, na tym samym TV i użytkowniku. Gdy TV straci sieć lub system nie uruchamia się poprawnie, zwykły mechanizm powrotu przez LAN może nie być dostępny. Nie ma gwarancji odwrócenia każdej awarii.
 
-Wcześniejszy debloat CleanMyTV/tvOS/innych narzędzi nie trafia do dziennika Ambient i nie jest automatycznie odtwarzany. Brak propozycji w szybkim profilu nie oznacza braku całego bloatware.
+Wcześniejszy debloat CleanMyTV/tvOS/innych narzędzi nie trafia do dziennika Ambient i nie jest automatycznie odtwarzany. Brak dodatkowych zmian w automatycznym profilu nie oznacza braku całego bloatware.
 
 ## Własne zdjęcia i prywatność
 

@@ -2,9 +2,9 @@
 
 **Lekki launcher Android TV / Google TV z astrofotografią i opcjonalnym Debloatem przez lokalne ADB.**
 
-**0.5.0-beta1 · Android 8+ · Kotlin · MIT dla kodu**
+**0.5.1-beta1 · Android 8+ · Kotlin · MIT dla kodu**
 
-[Polski](#polski) · [English](#english) · [Pobierz APK / Download APK](https://github.com/AdamGorniak/ambient-home/releases/tag/v0.5.0-beta1)
+[Polski](#polski) · [English](#english) · [Pobierz APK / Download APK](https://github.com/AdamGorniak/ambient-home/releases/tag/v0.5.1-beta1)
 
 ## Polski
 
@@ -23,13 +23,13 @@ Ambient Home powstał z potrzeby spokojnego, szybkiego ekranu głównego: fotogr
 - Zegar, data, pogoda dla wybranej miejscowości oraz dyskretne statystyki pamięci, CPU i sieci. Bez domyślnej prywatnej lokalizacji autora.
 - Źródła TV odczytywane z API urządzenia; własne nazwy i kolejność. Brak założenia, że każdy sprzęt ma takie same HDMI.
 - Import własnych fotografii przez selektor dokumentów lub jawnie uruchamiany transfer LAN, gdy selektor producenta nie działa.
-- **Debloat bez stale podłączonego PC**: lokalne ADB w APK, propozycje do przejrzenia, dziennik zmian, raport i przywracanie.
+- **Debloat bez stale podłączonego PC**: lokalne ADB w APK, automatyczny dobór według profilu, jedno potwierdzenie, dziennik zmian, raport i przywracanie.
 
 Interfejs APK jest obecnie po polsku. Dokumentacja dostępna jest również po angielsku poniżej.
 
 ### Zrzuty ekranu
 
-Rzeczywiste obrazy z Xiaomi MiTV-MOOR2 / Android 11. Ekran główny pochodzi z uniwersalnego wariantu testowego 0.5 beta; menu Debloat pokazuje ten sam zestaw funkcji co wydanie beta. Odczyty statystyk na screenach dotyczą chwili wykonania zdjęcia.
+Rzeczywiste obrazy z Xiaomi MiTV-MOOR2 / Android 11. Ekran główny pochodzi z uniwersalnego wariantu testowego 0.5 beta; screeny Debloatu pokazują wersję 0.5.0, sprzed przeniesienia ręcznych narzędzi do Zaawansowanych i dodania automatycznego doboru w 0.5.1. Odczyty statystyk na screenach dotyczą chwili wykonania zdjęcia.
 
 ![Ekran główny z fotografią nocnego nieba i dockiem](docs/screenshots/home.png)
 
@@ -41,7 +41,7 @@ Fotografie zachowują kredyty autorów widoczne na ekranie; zobacz [informacje o
 
 ### Instalacja
 
-1. Pobierz `AmbientHome-0.5.0-beta1-universal.apk` z [wydania beta](https://github.com/AdamGorniak/ambient-home/releases/tag/v0.5.0-beta1).
+1. Pobierz `AmbientHome-0.5.1-beta1-universal.apk` z [wydania beta](https://github.com/AdamGorniak/ambient-home/releases/tag/v0.5.1-beta1).
 2. Opcjonalnie sprawdź SHA-256 pliku względem `SHA256SUMS.txt` z tego samego wydania.
 3. Zainstaluj APK na Android TV / Google TV. Ustawienia zgody na instalację spoza sklepu zależą od urządzenia.
 4. Otwórz Ambient, wybierz miejscowość pogody i skonfiguruj dock. Instalacja nie wymaga włączania Debloatu.
@@ -51,19 +51,19 @@ To APK beta podpisane lokalnym kluczem deweloperskim projektu, nie wydanie sklep
 
 ### Debloat prosto z APK
 
-**Ustawienia → Debloat · narzędzia ADB → Szybki debloat · wykryj propozycje**
+**Ustawienia → Debloat · narzędzia ADB → Szybkie czyszczenie · dobór automatyczny**
 
 1. Włącz debugowanie i **klasyczne sieciowe ADB TCP** na TV, zwykle na porcie 5555.
 2. Wybierz Połącz / sprawdź ADB i zaakceptuj klucz RSA Ambient na ekranie TV. Po pierwszej akceptacji może być potrzebne ponowienie sprawdzenia.
-3. Uruchom Szybki debloat. Sprawdź proponowane pozycje, odznacz niechciane i przejrzyj plan.
-4. Pobierz zewnętrzną kopię planu/raportu, następnie wybierz Wykonaj plan.
+3. Uruchom Szybkie czyszczenie. Ambient sam dobierze pakiety zgodne z profilem urządzenia. Nie ma listy do zaznaczania. Nieznane modele, firmware i wersje pakietów są pomijane bez automatycznych zmian.
+4. Możesz pobrać zewnętrzną kopię planu/raportu. Jedno potwierdzenie „Wyczyść” uruchamia dobrany plan.
 5. W razie potrzeby użyj Przywróć zmiany Ambient dla jednej lub wszystkich własnych zmian.
 
 APK komunikuje się z ADB na **tym samym TV**. Nie wymaga stale działającego komputera, Home Assistanta, Shizuku ani roota. **Jeśli firmware nie pozwala włączyć sieciowego ADB z menu, może być potrzebne jednorazowe przygotowanie przez komputer.** Parowanie TLS kodem/QR nowego Wireless debugging nie jest obsługiwane w tej wersji. Po restarcie niektóre TV ponownie wyłączają port ADB.
 
 Debloat nie działa samoczynnie po instalacji, w tle ani przy każdym uruchomieniu. Wyłącza pakiety dla użytkownika aplikacji, bez usuwania APK, czyszczenia danych i resetu TV. Każdy początkowy stan jest zapisywany przed poleceniem. Błąd przerywa dalsze wykonywanie planu; wykonane wcześniej zmiany pozostają w dzienniku.
 
-**Zakres początkowego katalogu:** szybkie propozycje obejmują obecnie sześć znanych identyfikatorów reklam/treści, analityki i demo, głównie Xiaomi. To nie jest kompletna baza wszystkich marek. Pozostałe pakiety można przeglądać; nieopisane wymagają osobno włączonego trybu ręcznego. Brak propozycji nie oznacza braku całego bloatware.
+**Zakres automatu w 0.5.1:** jeden osobny pakiet analityki Xiaomi, na dokładnie wskazanym modelu, firmware i wersji pakietu. Profil oparto na audycie i obserwacji TV z pakietem już wyłączonym; nie na nowym teście wyłączenia/przywrócenia. Szczegóły i ograniczenia: [profile automatyczne](docs/AUTOMATIC-DEBLOAT.md). Brak zgodnego profilu oznacza brak automatycznych zmian, a nie prośbę o samodzielne rozpoznawanie pakietów. Ręczne narzędzia przeniesiono do **Zaawansowanych**; ich włączenie nie rozszerza automatu. Brak dodatkowych zmian nie oznacza braku całego bloatware.
 
 ### Ochrona i powrót
 
@@ -79,7 +79,7 @@ Raport JSON zawiera stany i polecenia odzyskiwania. Pobierasz go przez tymczasow
 |---|---|
 | Wymagania | Android TV / Google TV, Android 8+ / API 26; target SDK 35 |
 | Sprzęt testowy | Xiaomi MiTV-MOOR2, Android 11 / API 30 |
-| Testy automatyczne | 26 testów: ADB/RSA, blokady, dziennik, awarie i przywracanie, plan zbiorczy |
+| Testy automatyczne | 36 testów: ADB/RSA, blokady, dziennik, awarie i przywracanie, plan zbiorczy |
 | Debloat na rzeczywistym TV | Lokalne ADB, skan, blokady GMS i eksport raportu; test **odczytowy**, bez wyłączeń systemowych |
 | Rzeczywiste wyłączenia/przywracanie | Sprawdzone w kontrolowanych testach modelowych shell/journal; wymagają dalszych testów sprzętowych |
 | Inne modele / restart / długi test | Brak potwierdzenia dla wszystkich firmware; mile widziane raporty zgodności |
@@ -124,13 +124,13 @@ Ambient Home is a lightweight native Android TV / Google TV launcher built aroun
 - Clock, date, user-selected weather and subtle device memory/network statistics; app CPU is clearly identified when device-wide CPU is unavailable.
 - TV input discovery with editable local labels/order, without Xiaomi-specific HDMI IDs.
 - Custom photo import through a document picker or an explicitly opened temporary LAN transfer when an OEM picker is unavailable.
-- Optional **on-device ADB Debloat**, with proposals, a review step, a durable change journal, report export and restore.
+- Optional **on-device ADB Debloat**, with profile-based automatic selection, one confirmation, a durable change journal, report export and restore.
 
-[Real screenshots are shown above](#zrzuty-ekranu). They were captured on a Xiaomi MiTV-MOOR2 / Android 11; the home image uses the universal 0.5 test build. Statistics are momentary readings, not performance guarantees. Photograph credits remain visible on screen.
+[Real screenshots are shown above](#zrzuty-ekranu). They were captured on a Xiaomi MiTV-MOOR2 / Android 11; the images use the universal 0.5.0 test build, before 0.5.1 moved individual tools under Advanced and introduced automatic selection. Statistics are momentary readings, not performance guarantees. Photograph credits remain visible on screen.
 
 ### Install
 
-1. Download `AmbientHome-0.5.0-beta1-universal.apk` from the [beta release](https://github.com/AdamGorniak/ambient-home/releases/tag/v0.5.0-beta1).
+1. Download `AmbientHome-0.5.1-beta1-universal.apk` from the [beta release](https://github.com/AdamGorniak/ambient-home/releases/tag/v0.5.1-beta1).
 2. Optionally verify its SHA-256 against the release's `SHA256SUMS.txt`.
 3. Sideload it on Android TV / Google TV, following your device's installer prompts.
 4. Open Ambient, select your weather location and configure the dock. Debloat is optional.
@@ -140,19 +140,19 @@ This beta APK uses the project's local development signing key, not a Play Store
 
 ### On-device Debloat — no continuously connected PC
 
-Open **Settings → Debloat → Quick debloat / detect proposals** (Polish labels: `Debloat · narzędzia ADB` → `Szybki debloat · wykryj propozycje`).
+Open **Settings → Debloat → Quick cleanup / automatic selection** (Polish labels: `Debloat · narzędzia ADB` → `Szybkie czyszczenie · dobór automatyczny`).
 
 1. Enable **classic network ADB TCP**, usually port 5555, in the TV's developer options.
 2. Check the local ADB connection and approve Ambient's RSA key on the TV. Retry after the first approval if needed.
-3. Run Quick debloat, inspect the proposed packages and deselect anything you want to keep.
-4. Review the plan, download a recovery copy, then explicitly execute it.
+3. Run automatic Quick cleanup. Ambient selects packages matching the device profile; there is no package checklist. Unknown models, firmware builds and package versions are skipped without automatic changes.
+4. Optionally download a recovery copy. One “Clean” confirmation executes the selected plan.
 5. Restore one or all changes made by Ambient from the restore menu.
 
 The APK connects to ADB on **the same TV**. It does not need a continuously running computer, Home Assistant, Shizuku or root. **A one-time PC setup may be necessary if your firmware cannot enable network ADB from its menus.** TLS code/QR pairing for newer Wireless debugging is not supported in this version. Some TVs close their ADB port after reboot.
 
 There is no automatic background cleanup or boot-time debloat. Operations use `pm disable-user` for the app's user, keeping APKs and data. Each original state is persisted before the command. A failed batch stops subsequent operations; already completed changes remain journaled.
 
-The initial quick catalog contains six known advertising/content, analytics and demo identifiers, mainly Xiaomi. It is **not an exhaustive multi-brand database**. Other system packages can be inspected; unclassified packages require a separately enabled manual mode. No proposals does not mean the TV has no bloatware.
+**Automatic scope in 0.5.1:** one standalone Xiaomi analytics package, restricted to an exact model, firmware fingerprint and package version. This profile is based on an audit and observation of a TV where the package was already disabled, not a fresh disable/restore test. See [automatic profiles](docs/AUTOMATIC-DEBLOAT.md). No matching profile means no automatic changes, without asking the user to identify packages. Individual tools are under **Advanced**; manual mode cannot expand automatic selection. No additional changes does not mean the TV has no bloatware.
 
 ### Protections and recovery
 
@@ -168,7 +168,7 @@ The recovery JSON includes original states and ADB recovery commands. Download i
 |---|---|
 | Minimum | Android TV / Google TV, Android 8 / API 26; target SDK 35 |
 | Hardware tested | Xiaomi MiTV-MOOR2, Android 11 / API 30 |
-| Automated tests | 26 covering ADB/RSA, protections, journaling, failures, restore and batches |
+| Automated tests | 36 covering ADB/RSA, protections, journaling, failures, restore and batches |
 | Real-device Debloat test | Local ADB, scans, GMS protection and report export; **read-only**, no system-package disable operations |
 | Disable/restore operations | Validated against controlled shell/journal models; further hardware testing is needed |
 | Other devices, reboot, long-term use | Not comprehensively validated; compatibility reports are welcome |

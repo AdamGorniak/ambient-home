@@ -29,6 +29,7 @@ class DebloatMenu(private val activity: Activity) : AutoCloseable {
     private var shell: Shell? = null
     private var protectedPackages = emptySet<String>()
     private var rows = listOf<Row>()
+    private val device get() = DebloatDevice(Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT)
     private var reportServer: PhotoTransferServer? = null
     private var reportDialog: AlertDialog? = null
     @Volatile private var closed = false
@@ -46,21 +47,27 @@ class DebloatMenu(private val activity: Activity) : AutoCloseable {
     fun show() {
         if (closed || activity.isDestroyed) return
         AlertDialog.Builder(activity).setTitle("Debloat · narzędzia ADB")
-            .setItems(arrayOf("Połącz / sprawdź ADB na tym TV", "Szybki debloat · wykryj propozycje", "Pakiety z opisem · do indywidualnej oceny", "Wszystkie pakiety systemowe", "Przywróć zmiany Ambient", "Dziennik i kopia raportu", "Tryb ręczny: " + if (prefs.getBoolean("manual", false)) "włączony" else "wyłączony", "Jak to działa")) { _, n ->
+            .setItems(arrayOf("Połącz / sprawdź ADB na tym TV", "Szybkie czyszczenie · dobór automatyczny", "Przywróć zmiany Ambient", "Dziennik i kopia raportu", "Zaawansowane · pojedyncze pakiety", "Jak to działa")) { _, n ->
                 when (n) {
                     0 -> connection()
                     1 -> scan(true, true)
-                    2 -> scan(true)
-                    3 -> scan(false)
-                    4 -> restoreMenu()
-                    5 -> journalMenu()
-                    6 -> {
-                        if (prefs.getBoolean("manual", false)) { prefs.edit().putBoolean("manual", false).apply(); show() }
-                        else AlertDialog.Builder(activity).setTitle("Nieznane pakiety producenta")
-                            .setMessage("Tryb ręczny pozwala wybierać nieopisane pakiety systemowe. Ich zależności nie są znane; wyłączenie może pozbawić TV ważnych funkcji. Chronione składniki nadal są zablokowane. Każdy pakiet wymaga osobnego potwierdzenia.")
-                            .setPositiveButton("Włącz tryb ręczny") { _, _ -> prefs.edit().putBoolean("manual", true).apply(); show() }.setNegativeButton("Anuluj", null).show()
-                    }
-                    7 -> message("Debloat — zasady", "Wyłączanie dla bieżącego użytkownika, bez usuwania APK i danych. Szybki debloat wykrywa propozycje reklam, analityki i demo; najpierw pokazuje listę i wymaga potwierdzenia planu. Stan początkowy jest zapisywany przed każdym poleceniem. Przywracanie dotyczy tylko zmian wykonanych przez Ambient.\n\nLaunchery, konfiguracja/recovery, podstawowe usługi Google, aktywna dostępność, administratorzy i wejścia TV są chronione. Lista nie dowodzi braku innych zależności producenta.\n\nWymagane autoryzowane klasyczne ADB TCP na tym TV. Połączenie nie działa w tle. Nie obsługuje parowania TLS kodem ani nie nadaje uprawnień administratora. Skopiuj raport przed zmianami; usunięcie danych aplikacji usuwa lokalny dziennik.")
+                    2 -> restoreMenu()
+                    3 -> journalMenu()
+                    4 -> advanced()
+                    5 -> message("Debloat — zasady", "Szybkie czyszczenie samo dobiera pakiety według dokładnego modelu, firmware i wersji pakietu. Wymaga jednego potwierdzenia, bez zaznaczania pakietów. Niepewne pozycje pomija. Brak profilu oznacza brak automatycznych zmian. Pierwszy wąski profil oparto na obserwacji Xiaomi MiTV-MOOR2; nie jest gwarancją bezpieczeństwa.\n\nWyłączanie dla bieżącego użytkownika, bez usuwania APK i danych. Stan początkowy jest zapisywany przed każdym poleceniem. Przywracanie dotyczy tylko zmian Ambient. Launchery, konfiguracja/recovery, podstawowe usługi Google, aktywna dostępność, administratorzy i wejścia TV są chronione.\n\nWymagane autoryzowane klasyczne ADB TCP na tym TV. Nie działa w tle. Skopiuj raport przed zmianami; usunięcie danych aplikacji usuwa lokalny dziennik.")
+                }
+            }.setNegativeButton("Zamknij", null).show()
+    }
+    private fun advanced() {
+        AlertDialog.Builder(activity).setTitle("Zaawansowane · własna ocena pakietów")
+            .setItems(arrayOf("Pakiety z opisem", "Wszystkie pakiety systemowe", "Tryb ręczny: " + if (prefs.getBoolean("manual", false)) "włączony" else "wyłączony")) { _, n ->
+                when (n) {
+                    0 -> scan(true)
+                    1 -> scan(false)
+                    2 -> if (prefs.getBoolean("manual", false)) { prefs.edit().putBoolean("manual", false).apply(); advanced() }
+                    else AlertDialog.Builder(activity).setTitle("Nieznane pakiety producenta")
+                        .setMessage("Własny wybór nieopisanych pakietów może pozbawić TV ważnych funkcji. Ochrona podstawowych składników pozostaje aktywna. Tryb ręczny nigdy nie rozszerza automatycznego profilu.")
+                        .setPositiveButton("Włącz tryb ręczny") { _, _ -> prefs.edit().putBoolean("manual", true).apply(); advanced() }.setNegativeButton("Anuluj", null).show()
                 }
             }.setNegativeButton("Zamknij", null).show()
     }
@@ -106,6 +113,10 @@ class DebloatMenu(private val activity: Activity) : AutoCloseable {
     }
     private fun engine(): DebloatEngine = DebloatEngine(requireShell(), store, user, activity.packageName, protectedPackages, prefs.getBoolean("manual", false))
     private fun scan(profileOnly: Boolean, quick: Boolean = false) {
+        if (quick && AutomaticDebloat.targets(device).isEmpty()) {
+            message("Brak profilu automatycznego", "Dla tego modelu i firmware nie ma jeszcze profilu automatycznego czyszczenia. Nic nie zostanie wyłączone. Nie musisz samodzielnie wybierać pakietów.\n\n${Build.MANUFACTURER} ${Build.MODEL}\n\nLauncher działa niezależnie od Debloatu.")
+            return
+        }
         job("Odczyt pakietów", {
             if (shell == null) establish(prefs.getInt("port", 5555))
             refreshProtection()
@@ -116,35 +127,37 @@ class DebloatMenu(private val activity: Activity) : AutoCloseable {
                 val label = try { activity.packageManager.getApplicationLabel(activity.packageManager.getApplicationInfo(pkg, 0)).toString() } catch (_: Exception) { pkg }
                 Row(pkg, label, pkg in disabled)
             }.sortedWith(compareBy<Row> { DebloatPolicy.protection(it.pkg, activity.packageName, protectedPackages) != null }.thenBy { it.label.lowercase() })
+            if (quick) rows = rows.filter { !it.disabled && engine().automaticEligible(it.pkg, device) }
         }) {
             val values = rows.filter { !profileOnly || it.pkg in DebloatPolicy.profiles }
-            if (quick) quickPlan(values.filter { !it.disabled && it.pkg in DebloatPolicy.quickCandidates && DebloatPolicy.protection(it.pkg, activity.packageName, protectedPackages) == null })
+            if (quick) quickPlan(values)
             else if (values.isEmpty()) message("Pakiety", "Nie znaleziono pasujących pakietów systemowych") else packageList(values)
         }
     }
     private fun quickPlan(values: List<Row>) {
-        if (values.isEmpty()) { message("Szybki debloat", "Nie znaleziono dodatkowych propozycji w dołączonym profilu reklam, analityki i demo. Część mogła już być wyłączona. Nie oznacza to braku całego bloatware na TV."); return }
-        val checked = BooleanArray(values.size) { true }
-        AlertDialog.Builder(activity).setTitle("Propozycje · sprawdź listę")
-            .setMultiChoiceItems(values.map { it.label + "\n" + it.pkg }.toTypedArray(), checked) { _, n, on -> checked[n] = on }
-            .setPositiveButton("Przejrzyj plan") { _, _ ->
-                val selected = values.filterIndexed { n, _ -> checked[n] }
-                if (selected.isEmpty()) { message("Plan", "Nie wybrano pakietów"); return@setPositiveButton }
-                job("Przygotowanie planu", {
-                    refreshProtection()
-                    selected.map { row -> DebloatChange(row.pkg, engine().state(row.pkg), user, "proposal", System.currentTimeMillis()) }.filter { it.previous in 0..1 }
-                }) { proposals ->
-                    if (proposals.isEmpty()) { message("Plan", "Pakiety są już wyłączone"); return@job }
-                    val summary = proposals.joinToString("\n\n") { p -> p.pkg + "\n" + DebloatPolicy.profiles[p.pkg].orEmpty() }
-                    AlertDialog.Builder(activity).setTitle("Wyłączyć ${proposals.size} pakietów?")
-                        .setMessage("${Build.MANUFACTURER} ${Build.MODEL}\n\n$summary\n\nAPK i dane pozostaną na TV. Każdy stan zostanie zapisany przed zmianą. Błąd przerwie dalsze wyłączanie; wykonane zmiany będzie można przywrócić.")
-                        .setPositiveButton("Wykonaj plan") { _, _ -> job("Wykonywanie planu", {
-                            DebloatBatch.run(proposals.map { it.pkg }) { pkg -> check(!closed) { "Test przerwany" }; refreshProtection(); engine().disable(pkg) }.joinToString("\n\n")
-                        }) { message("Wynik planu", it) } }
-                        .setNeutralButton("Kopia planu i raportu") { _, _ -> shareReport(proposals = proposals) }
-                        .setNegativeButton("Anuluj", null).show()
-                }
-            }.setNegativeButton("Anuluj", null).show()
+        if (values.isEmpty()) {
+            message("Szybkie czyszczenie", "Brak dodatkowych zmian pasujących do profilu. Pakiety mogą być już wyłączone, chronione lub mieć inną wersję. Niepewne pozycje pominięto. Nie oznacza to braku całego bloatware na TV.")
+            return
+        }
+        job("Przygotowanie czyszczenia", {
+            refreshProtection()
+            values.filter { engine().automaticEligible(it.pkg, device) }
+                .map { row -> DebloatChange(row.pkg, engine().state(row.pkg), user, "proposal", System.currentTimeMillis()) }
+                .filter { it.previous in 0..1 }
+        }) { proposals ->
+            if (proposals.isEmpty()) { message("Szybkie czyszczenie", "Brak dodatkowych zmian pasujących do profilu. Nic nie wyłączono."); return@job }
+            AlertDialog.Builder(activity).setTitle("Uruchomić szybkie czyszczenie?")
+                .setMessage("Ambient dobrał ${proposals.size} składników analityki do tego modelu i firmware. Nie musisz wybierać pakietów. Pozostałe, niepewne pozycje zostaną pominięte.\n\nAPK i dane pozostaną na TV. Stan zostanie zapisany przed każdą zmianą. Powrót: Przywróć zmiany Ambient.\n\nProfil oparto na obserwacji pakietu już wyłączonego na testowym TV, bez nowego testu wyłączenia/przywrócenia. Wersja beta — używasz na własną odpowiedzialność.")
+                .setPositiveButton("Wyczyść") { _, _ -> job("Szybkie czyszczenie", {
+                    DebloatBatch.run(proposals.map { it.pkg }) { pkg ->
+                        check(!closed) { "Operacja przerwana" }
+                        refreshProtection()
+                        engine().disableAutomatic(pkg, device)
+                    }.joinToString("\n\n")
+                }) { message("Wynik czyszczenia", it) } }
+                .setNeutralButton("Kopia planu i raportu") { _, _ -> shareReport(proposals = proposals) }
+                .setNegativeButton("Anuluj", null).show()
+        }
     }
     private fun packageList(values: List<Row>) {
         AlertDialog.Builder(activity).setTitle("Pakiety · nic nie jest zaznaczone")
